@@ -8,14 +8,12 @@ import com.secure.enterprise.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.sql.DataSource;
 
 import java.time.LocalDate;
 
@@ -23,10 +21,14 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+/* this annotation is required to enable method level security. Commented in admin controller
+ */
+@EnableMethodSecurity(prePostEnabled = true,securedEnabled = true , jsr250Enabled = true )
 public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
+               // .requestMatchers("/api/admin/**").hasRole("ADMIN")  Either use this or method level security for role based access
                 .anyRequest().authenticated());
         http.csrf(AbstractHttpConfigurer::disable);
         //http.formLogin(withDefaults());
@@ -100,5 +102,5 @@ This implementation uses generic JdbcUserDetailsManager to create usr and admin.
         return manager;
     }
          */
-    
+
 }
